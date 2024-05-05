@@ -1,0 +1,8 @@
+@media(min-width: 1200px) {
+    .containerheader {
+        max-width: 85% !important;
+    }
+}
+.MenuItem {
+    background-color: #354b9c;
+}

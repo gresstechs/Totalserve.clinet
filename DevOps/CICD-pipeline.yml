@@ -1,0 +1,64 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: windows-latest
+
+stages:
+ - stage: Build
+   displayName: Build Total Serve client Application
+   jobs:
+     - job: BuildApp
+       displayName: Build Application
+       steps:
+        - task: NodeTool@0
+          displayName: Install Node js
+          inputs:
+            versionSource: 'spec'
+            versionSpec: '21.x'
+        
+        - script: npm install 
+          displayName: To restore the Node module to Total serve App
+       
+        - script: npm run build
+          displayName: Build TotalServe
+        
+        - task: PublishBuildArtifacts@1
+          inputs:
+           pathtoPublish: dist
+           ArtifactName: 'dist'
+
+ - stage: DeployDev
+   displayName: Develop Evironment
+   dependsOn: Build
+   
+   jobs:
+     - deployment: deployment 
+       environment: Development
+       displayName: "Deploymnet to Dev"
+       strategy:
+        runOnce: 
+         deploy:
+          steps:
+          - task: DownloadBuildArtifacts@1
+            inputs:
+             buildType: 'current'
+             downloadType: 'single'
+             artifactName: 'dist'
+             downloadPath: '$(Build.ArtifactStagingDirectory)'
+            displayName: Download TotalServe from Artifact
+        
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+             ConnectionType: 'AzureRM'
+             azureSubscription: 'Azure subscription 1 (0fadb926-6d1e-4cd8-8dc3-642b929be07f)'
+             appType: 'webApp'
+             WebAppName: 'samfancyDev'
+             packageForLinux: '$(Build.ArtifactStagingDirectory)/dist'
+
+ 
