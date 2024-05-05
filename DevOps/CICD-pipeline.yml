@@ -11,10 +11,10 @@ pool:
 
 stages:
  - stage: Build
-   displayName: Build Total Serve client Application
+   displayName: Build Total Serve client System
    jobs:
      - job: BuildApp
-       displayName: Build Application
+       displayName: Build System
        steps:
         - task: NodeTool@0
           displayName: Install Node js
