@@ -1,0 +1,27 @@
+
+.tsm-bannar {
+    /*height: 600px;*/
+}
+.bannervideo {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+@media (min-width: 1200px) {
+    .bannervideo {
+        height: 600px;
+    }
+}
+
+@media (min-width: 920px) {
+    .bannervideo {
+        height: 400px;
+    }
+}
+
+@media screen and (min-width:768px) {
+    .bannervideo {
+        height: 260px;
+    }
+}

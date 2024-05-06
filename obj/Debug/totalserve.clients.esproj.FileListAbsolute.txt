@@ -1,0 +1,1 @@
+C:\Development\TotalServe\TotalServe.Clients\obj\Debug\totalserve.clients.esproj.CoreCompileInputs.cache
