@@ -26,7 +26,7 @@ stages:
           displayName: To restore the Node module to Total serve App
        
         - script: npm run build
-          displayName: Build TotalServe
+          displayName: Build TotalServe App
         
         - task: PublishBuildArtifacts@1
           inputs:
