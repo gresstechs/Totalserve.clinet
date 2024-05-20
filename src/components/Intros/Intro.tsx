@@ -8,7 +8,7 @@ const Intro = () => {
             <Card sx={{ backgroundColor: '#00A7E5' }}>
                 <CardContent>
                     <Typography component="p">
-                        HelpBy leads the way in offering both scheduled and on-demand maintenance services to residences and companies across the entire country. Our expertise covers a wide array of services, encompassing plumbing, locksmith services, gas and heating, electrical work, and drainage.
+                        HelpBy leads the way in offering both scheduled and on-demand maintenance services to residences and companies across the entire country. Our expertise covers a wide array of services, encompassing plumbing, locksmith services, gas and heating, electrical work
                     </Typography>
                 </CardContent>
             </Card>
