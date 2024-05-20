@@ -25,7 +25,8 @@ stages:
     - script: npm run build
       displayName: Build Total Serve Application
 
-    - task: PublishBuildArtifact@1
+    - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
+        publishLocation: 'Container'
