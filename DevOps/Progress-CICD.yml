@@ -30,3 +30,29 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
+
+- stage: Deploy
+  displayName: Deploy to Azure Web App
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: DeployJob
+    displayName: Deploy Job
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
+        appType: 'webApp'
+        WebAppName: 'esafetyApp'
+        deployToSlotOrASE: true
+        ResourceGroupName: 'Prodevrg'
+        SlotName: 'production'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        ScriptType: 'Inline Script'
+        InlineScript: ':: You can provide your deployment commands here. One command per line.'
+        enableCustomDeployment: true
+        DeploymentType: 'webDeploy'
+        TakeAppOfflineFlag: false
