@@ -22,47 +22,11 @@ stages:
     - script: npm install
       displayName: Restore Packages
 
-    - script: npm run build --if-present
+    - script: npm run build
       displayName: Build Total Serve Application
-
-    # Add a step to copy the build output to the artifact staging directory
-    - script: |
-        echo Copying files to $(Build.ArtifactStagingDirectory)
-        xcopy /s /y /i build $(Build.ArtifactStagingDirectory)
-      displayName: 'Copy Files to Artifact Staging Directory'
-
-    # Debugging step to list the contents of the artifact staging directory
-    - script: dir $(Build.ArtifactStagingDirectory)
-      displayName: 'List Artifact Staging Directory'
 
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-
-- stage: Deploy
-  displayName: Deploy to Azure Web App
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-  - job: DeployJob
-    displayName: Deploy Job
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
-        appType: 'webApp'
-        WebAppName: 'esafetyApp'
-        deployToSlotOrASE: true
-        ResourceGroupName: 'Prodevrg'
-        SlotName: 'production'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-        ScriptType: 'Inline Script'
-        InlineScript: ':: You can provide your deployment commands here. One command per line.'
-        enableCustomDeployment: true
-        DeploymentType: 'webDeploy'
-        TakeAppOfflineFlag: false
