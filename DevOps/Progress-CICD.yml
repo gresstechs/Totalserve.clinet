@@ -22,8 +22,18 @@ stages:
     - script: npm install
       displayName: Restore Packages
 
-    - script: npm run build
+    - script: npm run build --if-present
       displayName: Build Total Serve Application
+
+    # Add a step to copy the build output to the artifact staging directory
+    - script: |
+        echo Copying files to $(Build.ArtifactStagingDirectory)
+        xcopy /s /y /i build $(Build.ArtifactStagingDirectory)
+      displayName: 'Copy Files to Artifact Staging Directory'
+
+    # Debugging step to list the contents of the artifact staging directory
+    - script: dir $(Build.ArtifactStagingDirectory)
+      displayName: 'List Artifact Staging Directory'
 
     - task: PublishBuildArtifacts@1
       inputs:
