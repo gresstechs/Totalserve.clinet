@@ -1,0 +1,59 @@
+# Welcome to progress CI and CD pipeline
+
+trigger:
+  -none
+
+pool:
+  vmImage: windows-latest
+
+stages:
+  -stage: Build
+    displayName: Esafety App
+    jobs:
+      -job: BuildApp
+       displayName: Build Esafety Application
+
+       steps:
+        
+        - task: NodeTool@0
+          inputs:
+            versionSpec: '22.x'
+          displayName: Set up Node.js
+
+          - script: npm install
+            displayName: Restore Packages
+
+          - script: npm run build
+            displayName: Build Esafety Application
+          
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: 'dist'
+              ArtifactName: 'drop'
+              publishLocation: 'dist'
+
+  -stage: Deploy
+    displayName: Deployment
+   
+    jobs:
+      -job: DeployToCloud
+       displayName: Deploy to cloud
+
+       steps:
+
+       -task: DownloadBuildArtifacts@1
+        displayName: Download Artifacts
+        input:
+          buildType: 'current'
+          downloadType: 'single'
+          downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+      - task: AzureRmWebAppDeployment@4
+        displayName: deploy azure app service
+        inputs:
+          ConnectionType: 'AzureRM'
+          azureSubscription: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
+          appType: 'webApp'
+          WebAppName: 'esafetyApp'
+          packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+
