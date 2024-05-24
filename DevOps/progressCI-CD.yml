@@ -28,7 +28,6 @@ stages:
       inputs:
         PathtoPublish: 'dist'
         ArtifactName: 'drop'
-        publishLocation: 'Container'
 
 - stage: Deploy
   displayName: Deployment
@@ -52,4 +51,4 @@ stages:
         azureSubscription: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
         appType: 'webApp'
         WebAppName: 'esafetyApp'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        packageForLinux: '$(Build.ArtifactStagingDirectory)/drop'
