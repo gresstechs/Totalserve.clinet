@@ -25,8 +25,12 @@ stages:
     - script: npm run build
       displayName: Build Total Serve Application
 
-    - task: PublishBuildArtifact@1
+    - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: 'dist'
         ArtifactName: 'drop'
+<<<<<<< HEAD
         PublishLocation: 'dist'
+=======
+        publishLocation: 'dist'
+>>>>>>> eef4284498b88d13765e1c6629bf899848e8462f
