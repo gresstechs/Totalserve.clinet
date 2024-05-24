@@ -29,8 +29,4 @@ stages:
       inputs:
         PathtoPublish: 'dist'
         ArtifactName: 'drop'
-<<<<<<< HEAD
-        PublishLocation: 'dist'
-=======
         publishLocation: 'dist'
->>>>>>> eef4284498b88d13765e1c6629bf899848e8462f
