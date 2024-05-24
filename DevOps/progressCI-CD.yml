@@ -1,7 +1,7 @@
 # Welcome to progress CI and CD pipeline
 
 trigger:
-- none
+- master
 
 pool:
   vmImage: 'windows-latest'
