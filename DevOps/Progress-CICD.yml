@@ -29,3 +29,4 @@ stages:
       inputs:
         PathtoPublish: 'dist'
         ArtifactName: 'drop'
+        PublishLocation: 'dist'
