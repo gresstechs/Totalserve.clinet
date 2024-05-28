@@ -52,9 +52,6 @@ stages:
   - job: DeployArm
     displayName: Deploy ARM Template for Taylor
     steps:
-  - job: DeployArm
-    displayName: Deploy ARM Template for Taylor
-    steps:
     - task: DownloadBuildArtifacts@1
       displayName: Download ARM Template Artifact
       inputs:
