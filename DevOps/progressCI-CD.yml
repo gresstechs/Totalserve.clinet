@@ -29,14 +29,18 @@ stages:
         PathtoPublish: 'dist'
         ArtifactName: 'drop'
 
-
-    -job: ARM Template
-      displayName: ARM Template for Taylorfield App
-      steps:
-
+  - job: ArmTemplate
+    displayName: ARM Template for Taylorfield App
+    steps:
+    - script: echo "Checking if ARM template file exists"
+      displayName: Check ARM Template File
+      continueOnError: true
+    - script: ls ARM/Taylor.json
+      displayName: List ARM Template File
+      continueOnError: true
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: 'DevOps/Taylor.json'
+        PathtoPublish: 'ARM/Taylor.json'
         ArtifactName: 'arm'
 
 - stage: Deploy
@@ -45,30 +49,26 @@ stages:
   condition: succeeded()
 
   jobs:
-    
-    job: DeployArm
-    displayName: Deploy Arm Template for Taylor
-    steps: 
+  - job: DeployArm
+    displayName: Deploy ARM Template for Taylor
+    steps:
     - task: DownloadBuildArtifacts@1
-      displayName: Download Arm Template Artifact
+      displayName: Download ARM Template Artifact
       inputs:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'arm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/arm'
 
-
-  - job: DeployToCloud
-    displayName: Deploy to Cloud
-    steps:
-    - task: DownloadBuildArtifacts@1
-      displayName: Download Artifacts
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
+    - script: echo "Checking downloaded ARM template file"
+      displayName: Check Downloaded ARM Template File
+      continueOnError: true
+    - script: ls $(Build.ArtifactStagingDirectory)/arm
+      displayName: List Downloaded ARM Template File
+      continueOnError: true
 
     - task: AzureResourceManagerTemplateDeployment@3
+      displayName: Deploy ARM Template
       inputs:
         deploymentScope: 'Resource Group'
         azureResourceManagerConnection: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
@@ -77,15 +77,22 @@ stages:
         resourceGroupName: 'Prodevrg'
         location: 'UK West'
         templateLocation: 'Linked artifact'
-        csmFile: '$(Build.ArtifactStagingDirectory)/DevOps/Taylor.json'
-        overrideParameters: '-TtechName "TtechservicePlan" '-TtechSKU "Free" '-TtechWorkerSize "2"
+        csmFile: '$(Build.ArtifactStagingDirectory)/ARM/Taylor.json'
+        overrideParameters: '-TtechName "TtechservicePlan" -TtechSKU "Free" -TtechWorkerSize "2"'
         deploymentMode: 'Incremental'
         deploymentName: 'Arm Template Deployment'
-    
-    -jobs: DeploytoCloud
-      displayName: Deploy to Cloud
-      dependsOn: DeployArm
-      
+
+  - job: DeployToCloud
+    displayName: Deploy to Cloud
+    dependsOn: DeployArm
+    steps:
+    - task: DownloadBuildArtifacts@1
+      displayName: Download Artifacts
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
 
     - task: AzureRmWebAppDeployment@4
       displayName: Deploy Azure App Service
