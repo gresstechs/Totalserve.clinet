@@ -40,7 +40,7 @@ stages:
       continueOnError: true
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: 'ARM/Taylor.json'
+        PathtoPublish: 'ARM'
         ArtifactName: 'arm'
 
 - stage: Deploy
