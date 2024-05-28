@@ -40,7 +40,7 @@ stages:
       continueOnError: true
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: 'ARM/Taylor.json'
+        PathtoPublish: 'ARM'
         ArtifactName: 'arm'
 
 - stage: Deploy
@@ -92,19 +92,7 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'drop'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
-
-  # - job: DeployToCloud
-  #   displayName: Deploy to Cloud
-  #   dependsOn: DeployArm
-  #   steps:
-  #   - task: DownloadBuildArtifacts@1
-  #     displayName: Download Artifacts
-  #     inputs:
-  #       buildType: 'current'
-  #       downloadType: 'single'
-  #       artifactName: 'drop'
-  #       downloadPath: '$(Build.ArtifactStagingDirectory)'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/arm'
 
     - task: AzureRmWebAppDeployment@4
       displayName: Deploy Azure App Service
