@@ -52,7 +52,11 @@ stages:
   - job: DeployArm
     displayName: Deploy ARM Template for Taylor
     steps:
+  - job: DeployArm
+    displayName: Deploy ARM Template for Taylor
+    steps:
     - task: DownloadBuildArtifacts@1
+      displayName: Download ARM Template Artifact
       displayName: Download ARM Template Artifact
       inputs:
         buildType: 'current'
@@ -69,6 +73,7 @@ stages:
 
     - task: AzureResourceManagerTemplateDeployment@3
       displayName: Deploy ARM Template
+      displayName: Deploy ARM Template
       inputs:
         deploymentScope: 'Resource Group'
         azureResourceManagerConnection: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
@@ -81,6 +86,18 @@ stages:
         overrideParameters: '-TtechName "TtechservicePlan" -TtechSKU "Free" -TtechWorkerSize "2"'
         deploymentMode: 'Incremental'
         deploymentName: 'Arm Template Deployment'
+
+  - job: DeployToCloud
+    displayName: Deploy to Cloud
+    dependsOn: DeployArm
+    steps:
+    - task: DownloadBuildArtifacts@1
+      displayName: Download Artifacts
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
 
   - job: DeployToCloud
     displayName: Deploy to Cloud
