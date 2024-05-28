@@ -1,0 +1,67 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "TtechName": {
+            "type": "string",
+            "minLength": 1
+        },
+        "TtechSKU": {
+            "type": "string",
+            "allowedValues": [
+                "Free",
+                "Shared",
+                "Basic",
+                "Standard"
+            ],
+            "defaultValue": "Free"
+        },
+        "TtechWorkerSize": {
+            "type": "string",
+            "allowedValues": [
+                "0",
+                "1",
+                "2"
+            ],
+            "defaultValue": "0"
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('TtechName')]",
+            "type": "Microsoft.Web/serverfarms",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2014-06-01",
+            "dependsOn": [],
+            "tags": {
+                "displayName": "Ttech"
+            },
+            "properties": {
+                "name": "[parameters('TtechName')]",
+                "sku": "[parameters('TtechSKU')]",
+                "workerSize": "[parameters('TtechWorkerSize')]",
+                "numberOfWorkers": 1
+            }
+        },
+        {
+            "name": "[variables('TaylorName')]",
+            "type": "Microsoft.Web/sites",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-08-01",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverfarms/', parameters('TtechName'))]"
+            ],
+            "tags": {
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('TtechName'))]": "Resource",
+                "displayName": "Taylor"
+            },
+            "properties": {
+                "name": "[variables('TaylorName')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('TtechName'))]"
+            }
+        }
+    ],
+    "variables": {
+        "TaylorName": "Taylorfield"
+    }
+}

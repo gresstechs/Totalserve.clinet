@@ -29,11 +29,35 @@ stages:
         PathtoPublish: 'dist'
         ArtifactName: 'drop'
 
+
+    -job: ARM Template
+      displayName: ARM Template for Taylorfield App
+      steps:
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: 'DevOps/Taylor.json'
+        ArtifactName: 'arm'
+
 - stage: Deploy
   displayName: Deployment
   dependsOn: Build
   condition: succeeded()
+
   jobs:
+    
+    job: DeployArm
+    displayName: Deploy Arm Template for Taylor
+    steps: 
+    - task: DownloadBuildArtifacts@1
+      displayName: Download Arm Template Artifact
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'arm'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+
   - job: DeployToCloud
     displayName: Deploy to Cloud
     steps:
@@ -43,6 +67,25 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
+        subscriptionId: 'dc464143-d774-480b-a67f-0d88f5a64406'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'Prodevrg'
+        location: 'UK West'
+        templateLocation: 'Linked artifact'
+        csmFile: '$(Build.ArtifactStagingDirectory)/DevOps/Taylor.json'
+        overrideParameters: '-TtechName "TtechservicePlan" '-TtechSKU "Free" '-TtechWorkerSize "2"
+        deploymentMode: 'Incremental'
+        deploymentName: 'Arm Template Deployment'
+    
+    -jobs: DeploytoCloud
+      displayName: Deploy to Cloud
+      dependsOn: DeployArm
+      
 
     - task: AzureRmWebAppDeployment@4
       displayName: Deploy Azure App Service
