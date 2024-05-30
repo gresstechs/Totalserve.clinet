@@ -39,10 +39,10 @@ stages:
       displayName: List ARM Template File
       continueOnError: true
       
-    # - task: PublishBuildArtifacts@1
-    #   inputs:
-    #     PathtoPublish: 'ARM'
-    #     ArtifactName: 'arm'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: 'ARM/Taylor.json'
+        ArtifactName: 'arm'
 
 - stage: Deploy
   displayName: Deployment
@@ -59,12 +59,12 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'arm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)/arm'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/ARM'
 
     - script: echo "Checking downloaded ARM template file"
       displayName: Check Downloaded ARM Template File
       continueOnError: true
-    - script: ls $(Build.ArtifactStagingDirectory)/arm
+    - script: ls $(Build.ArtifactStagingDirectory)/ARM
       displayName: List Downloaded ARM Template File
       continueOnError: true
 
@@ -78,7 +78,7 @@ stages:
         resourceGroupName: 'Prodevrg'
         location: 'UK West'
         templateLocation: 'Linked artifact'
-        csmFile: '$(Build.ArtifactStagingDirectory)/arm/Taylor.json'
+        csmFile: '$(Build.ArtifactStagingDirectory)/ARM/Taylor.json'
         overrideParameters: '-TtechName "TtechservicePlan" -TtechSKU "Free" -TtechWorkerSize "2"'
         deploymentMode: 'Incremental'
         deploymentName: 'Arm Template Deployment'
@@ -93,7 +93,7 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'arm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)/arm/Taylor.json'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/ARM/Taylor.json'
 
   # - job: DeployToCloud
   #   displayName: Deploy to Cloud
