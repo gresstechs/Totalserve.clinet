@@ -38,10 +38,11 @@ stages:
     - script: ls ARM/Taylor.json
       displayName: List ARM Template File
       continueOnError: true
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: 'ARM'
-        ArtifactName: 'arm'
+      
+    # - task: PublishBuildArtifacts@1
+    #   inputs:
+    #     PathtoPublish: 'ARM'
+    #     ArtifactName: 'arm'
 
 - stage: Deploy
   displayName: Deployment
