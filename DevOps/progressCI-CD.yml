@@ -32,15 +32,15 @@ stages:
   - job: ArmTemplate
     displayName: ARM Template for Taylorfield App
     steps:
-    - script: echo "Checking if ARM template file exists"
-      displayName: Check ARM Template File
-      continueOnError: true
-    - script: ls ARM/Taylor.json
-      displayName: List ARM Template File
-      continueOnError: true
+    # - script: echo "Checking if ARM template file exists"
+    #   displayName: Check ARM Template File
+    #   continueOnError: true
+    # - script: ls arm/Taylor.json
+    #   displayName: List ARM Template File
+    #   continueOnError: true
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: 'arm'
+        PathtoPublish: 'ARM/Taylor.json'
         ArtifactName: 'arm'
 
 - stage: Deploy
@@ -63,7 +63,7 @@ stages:
     - script: echo "Checking downloaded ARM template file"
       displayName: Check Downloaded ARM Template File
       continueOnError: true
-    - script: ls $(Build.ArtifactStagingDirectory)/arm
+    - script: ls $(Build.ArtifactStagingDirectory)/arm/Taylor.json
       displayName: List Downloaded ARM Template File
       continueOnError: true
 
@@ -94,17 +94,7 @@ stages:
         artifactName: 'arm'
         downloadPath: '$(Build.ArtifactStagingDirectory)/arm/Taylor.json'
 
-  # - job: DeployToCloud
-  #   displayName: Deploy to Cloud
-  #   dependsOn: DeployArm
-  #   steps:
-  #   - task: DownloadBuildArtifacts@1
-  #     displayName: Download Artifacts
-  #     inputs:
-  #       buildType: 'current'
-  #       downloadType: 'single'
-  #       artifactName: 'drop'
-  #       downloadPath: '$(Build.ArtifactStagingDirectory)'
+  
 
     - task: AzureRmWebAppDeployment@4
       displayName: Deploy Azure App Service
