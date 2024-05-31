@@ -8,10 +8,10 @@ pool:
 
 stages:
 - stage: Build
-  displayName: esafety App
+  displayName: Taylorfield App
   jobs:
   - job: BuildApp
-    displayName: Build Esafety Application
+    displayName: Build Taylorfield Application
     steps:
     - task: NodeTool@0
       inputs:
@@ -22,7 +22,7 @@ stages:
       displayName: Restore Packages
 
     - script: npm run build
-      displayName: Build Esafety Application
+      displayName: Build Taylorfield pplication
 
     - task: PublishBuildArtifacts@1
       inputs:
@@ -38,10 +38,9 @@ stages:
     - script: ls ARM/Taylor.json
       displayName: List ARM Template File
       continueOnError: true
-      
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: 'ARM/Taylor.json'
+        PathtoPublish: 'arm'
         ArtifactName: 'arm'
 
 - stage: Deploy
@@ -59,12 +58,12 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'arm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)/ARM'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/arm'
 
     - script: echo "Checking downloaded ARM template file"
       displayName: Check Downloaded ARM Template File
       continueOnError: true
-    - script: ls $(Build.ArtifactStagingDirectory)/ARM
+    - script: ls $(Build.ArtifactStagingDirectory)/arm
       displayName: List Downloaded ARM Template File
       continueOnError: true
 
@@ -78,7 +77,7 @@ stages:
         resourceGroupName: 'Prodevrg'
         location: 'UK West'
         templateLocation: 'Linked artifact'
-        csmFile: '$(Build.ArtifactStagingDirectory)/ARM/Taylor.json'
+        csmFile: '$(Build.ArtifactStagingDirectory)/arm/Taylor.json'
         overrideParameters: '-TtechName "TtechservicePlan" -TtechSKU "Free" -TtechWorkerSize "2"'
         deploymentMode: 'Incremental'
         deploymentName: 'Arm Template Deployment'
@@ -93,7 +92,7 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'arm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)/ARM/Taylor.json'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/arm/Taylor.json'
 
   # - job: DeployToCloud
   #   displayName: Deploy to Cloud
@@ -114,4 +113,4 @@ stages:
         azureSubscription: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
         appType: 'webApp'
         WebAppName: 'Taylorfield'
-        packageForLinux: '$(Build.ArtifactStagingDirectory)/drop'
+        packageForLinux: '$(Build.ArtifactStagingDirectory)/arm'
