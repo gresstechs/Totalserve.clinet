@@ -63,7 +63,7 @@ stages:
     - script: echo "Checking downloaded ARM template file"
       displayName: Check Downloaded ARM Template File
       continueOnError: true
-    - script: ls $(Build.ArtifactStagingDirectory)/arm/Taylor.json
+    - script: ls $(Build.ArtifactStagingDirectory)/arm
       displayName: List Downloaded ARM Template File
       continueOnError: true
 
@@ -92,7 +92,7 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: 'arm'
-        downloadPath: '$(Build.ArtifactStagingDirectory)/arm/Taylor.json'
+        downloadPath: '$(Build.ArtifactStagingDirectory)/arm/'
 
   
 
@@ -103,4 +103,4 @@ stages:
         azureSubscription: 'Azure subscription 1(dc464143-d774-480b-a67f-0d88f5a64406)'
         appType: 'webApp'
         WebAppName: 'Taylorfield'
-        packageForLinux: '$(Build.ArtifactStagingDirectory)/arm'
+        packageForLinux: '$(Build.ArtifactStagingDirectory)/drop/'
