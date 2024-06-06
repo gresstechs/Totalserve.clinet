@@ -63,7 +63,7 @@ stages:
     - script: echo "Checking downloaded ARM template file"
       displayName: Check Downloaded ARM Template File
       continueOnError: true
-    - script: ls $(Build.ArtifactStagingDirectory)/arm/Taylor.json
+    - script: ls $(Build.ArtifactStagingDirectory)ARM/Taylor.json
       displayName: List Downloaded ARM Template File
       continueOnError: true
 
